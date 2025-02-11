@@ -24,18 +24,6 @@ public class Main {
         taskManager.addSubtaskToHash(subtask2);
         taskManager.addSubtaskToHash(subtask1_1);
         taskManager.addSubtaskToHash(subtask1_2);
-////        System.out.println(taskManager.tasks);
-//        System.out.println(taskManager.epics);
-//        System.out.println(taskManager.subtasks);
-//
-////        taskManager.updateSubtask(subtask1_1, Status.IN_PROGRESS);
-////        taskManager.updateSubtask(subtask1_2, Status.DONE);
-////
-////        System.out.println(taskManager.epics);
-////        System.out.println(taskManager.subtasks);
-//        System.out.println("++++++++++++++++++");
-//        System.out.println(taskManager.getListSubtasksFromEpicId(taskManager.subtasks, taskManager.epics, 4));
-//
 
     }
 }
