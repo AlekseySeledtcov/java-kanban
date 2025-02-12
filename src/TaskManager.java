@@ -14,46 +14,20 @@ public class TaskManager {
         id = 0;
     }
 
-    public HashMap<Integer, Task> getTasks() {
-        return tasks;
-    }
-
-    public HashMap<Integer, Epic> getEpics() {
-        return epics;
-    }
-
-    public HashMap<Integer, Subtask> getSubtasks() {
-        return subtasks;
-    }
-
-    public int getId() {
-        id++;
-        return id;
-    }
-
     public void addTaskToHash(Task task) {
-        int key;
-        do {
-            key = getId();
-        } while (tasks.containsKey(key));
+        int key = getId();
         task.setId(key);
         tasks.put(key, task);
     }
 
     public void addEpicToHash(Epic epic) {
-        int key;
-        do {
-            key = getId();
-        } while (epics.containsKey(key));
+        int key = getId();
         epic.setId(key);
         epics.put(key, epic);
     }
 
-    public void addSubtaskToHash(Subtask subtask) {
-        int key;
-        do {
-            key = getId();
-        } while (subtasks.containsKey(key));
+    public void addSubtaskToHash(Subtask subtask){
+        int key = getId();
         int iDFromEpic = subtask.getEpicId();
         Epic epic = epics.get(iDFromEpic);
         epic.setSubtaskIdList(key);
@@ -137,7 +111,6 @@ public class TaskManager {
     //Обновление задач
     public void updateTask(Task task) {
         int key = task.getId();
-        tasks.remove(key);
         tasks.put(key, task);
     }
 
@@ -145,11 +118,22 @@ public class TaskManager {
         int key = subtask.getId(); // id переданный таски
         int epicId = subtask.getEpicId();
         ArrayList<Integer> idList;  //список связанных с эпиком сабтасков
-        subtasks.remove(key);
         subtasks.put(key, subtask);
         Epic epic = epics.get(epicId);
         idList = epic.getSubtaskIdList();
         epic.setStatus(setEpicStatusById(idList));
+    }
+
+    //****************************************************************************************
+    public void updateEpic(Epic epic) {
+        int key = epic.getId();         // id эпика
+        ArrayList<Integer> arrIdSubtasks;
+        Epic oldEpic = epics.get(key);
+        arrIdSubtasks = oldEpic.getSubtaskIdList();
+        for (Integer id : arrIdSubtasks) {
+            epic.setSubtaskIdList(id);
+        }
+        epics.put(key, epic);
     }
 
     //Получение списка всех подзадач определённого эпика
@@ -166,7 +150,7 @@ public class TaskManager {
 
     //Удаление задач по идентификатору.
     public void removeTaskById(int id) {
-            tasks.remove(id);
+        tasks.remove(id);
     }
 
     public void removeEpicById(int id) {
@@ -185,7 +169,10 @@ public class TaskManager {
         subtasks.remove(id);
         ArrayList<Integer> idList;
         Epic epic = epics.get(epicId);
+        epic.removeIdStFromEpicArr(id);
         idList = epic.getSubtaskIdList();
+        Status status = setEpicStatusById(idList);
+        epic.setStatus(status);
     }
 
     // Расчитывает статус Эпика
@@ -198,7 +185,8 @@ public class TaskManager {
             int nDone = 0;
             for (int i = 0; i < idList.size(); i++) {
                 int key = idList.get(i);
-                Status st = subtasks.get(key).getStatus();
+                Subtask subtask = subtasks.get(key);
+                Status st = subtask.getStatus();
                 if (st == Status.NEW) {
                     nNew++;
                 }
@@ -214,5 +202,9 @@ public class TaskManager {
             }
         }
         return status;
+    }
+
+    private int getId() {
+        return ++id;
     }
 }
