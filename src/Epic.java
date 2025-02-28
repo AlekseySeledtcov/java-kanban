@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Epic extends Task {
     protected ArrayList<Integer> subtaskIdList;
@@ -9,7 +10,7 @@ public class Epic extends Task {
     }
 
     public void setSubtaskIdList(Integer id) {
-        subtaskIdList.add(id);
+        subtaskIdList.add(this.id != id ? id : null);
     }
 
     public ArrayList<Integer> getSubtaskIdList() {
@@ -29,6 +30,25 @@ public class Epic extends Task {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Epic epic = (Epic) o;
+
+        if (id != epic.id) return false;
+        if (!Objects.equals(name, epic.name)) return false;
+        if (!Objects.equals(description, epic.description)) return false;
+        return status == epic.status && subtaskIdList.equals(epic.subtaskIdList);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + subtaskIdList.hashCode();
+        return result;
+    }
 
     @Override
     public String toString() {
