@@ -9,10 +9,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         memorySize = 10;
         history = new ArrayList<>(memorySize);
     }
+    @Override
     public List<Task> getHistory() {
         return history;
     }
 
+    @Override
     public void add(Task task) {
         if (history.size() == memorySize) {
             history.remove(0);

@@ -2,21 +2,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InMemoryTaskManager implements TaskManager{
+public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Task> tasks;
     private HashMap<Integer, Epic> epics;
     private HashMap<Integer, Subtask> subtasks;
     private int id;
-    List<Task> history;
 
-    HistoryManager historyManager = new InMemoryHistoryManager();
+    HistoryManager historyManager = Managers.getDefaultHistory();
 
     public InMemoryTaskManager() {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subtasks = new HashMap<>();
         id = 0;
-        history = new ArrayList<>(10);
     }
 
     @Override
@@ -190,9 +188,11 @@ public class InMemoryTaskManager implements TaskManager{
         }
         return arrSb;
     }
-     public List<Task> getHistory() {
+
+    @Override
+    public List<Task> getHistory() {
         return historyManager.getHistory();
-     }
+    }
 
     // Расчитывает статус Эпика
     private Status setEpicStatusById(ArrayList<Integer> idList) {
@@ -225,5 +225,4 @@ public class InMemoryTaskManager implements TaskManager{
     private int getId() {
         return id++;
     }
-
 }
