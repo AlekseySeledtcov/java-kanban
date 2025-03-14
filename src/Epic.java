@@ -21,7 +21,7 @@ public class Epic extends Task {
         subtaskIdList.clear();
     }
 
-// Удаляет id Сабтаска из списка сабтасков эпика
+    // Удаляет id Сабтаска из списка сабтасков эпика
     public void removeIdStFromEpicArr(int id) {
         for (int i = 0; i < subtaskIdList.size(); i++) {
             if (subtaskIdList.get(i) == id) {

@@ -16,6 +16,7 @@ public class SubtaskTest {
         subtask2 = new Subtask("Name Test Subtask", "Description Test Subtask", 0);
 
     }
+
     @Test
     void checkThatInstancesOfTheTaskClassAreEqualToEachOther() {
         assertEquals(subtask1.hashCode(), subtask2.hashCode(), "Объекты не равны друг другу");

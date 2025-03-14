@@ -1,24 +1,21 @@
-import java.util.ArrayList;
 import java.util.List;
+
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private int memorySize;
-    private List<Task> history;
+    MyLinkedHashMap history = new MyLinkedHashMap();
 
-    public InMemoryHistoryManager() {
-        memorySize = 10;
-        history = new ArrayList<>(memorySize);
-    }
     @Override
     public List<Task> getHistory() {
-        return history;
+        return history.getTask();
     }
 
     @Override
     public void add(Task task) {
-        if (history.size() == memorySize) {
-            history.remove(0);
-        }
-        history.add(task);
+        history.linkLast(task);
+    }
+
+    @Override
+    public void remove(int id) {
+        history.remove(id);
     }
 }

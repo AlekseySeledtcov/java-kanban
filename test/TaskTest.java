@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TaskTest {
@@ -7,7 +8,7 @@ public class TaskTest {
     Task task2 = new Task("Name Test Task", "Description Test Task");
 
     @Test
-            void checkThatInstancesOfTheTaskClassAreEqualToEachOther(){
+    void checkThatInstancesOfTheTaskClassAreEqualToEachOther() {
         assertEquals(task1.hashCode(), task2.hashCode(), "Объекты не равны друг другу");
     }
 }
