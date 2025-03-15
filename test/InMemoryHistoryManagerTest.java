@@ -3,9 +3,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MyLinkedHashMapTest {
+class InMemoryHistoryManagerTest {
     private final InMemoryTaskManager taskManager = new InMemoryTaskManager();
-    private final MyLinkedHashMap myLinkedHashMap = new MyLinkedHashMap();
     private Task task1;
     private Task task2;
     private Epic epic;
@@ -50,4 +49,5 @@ class MyLinkedHashMapTest {
         Task[] actualArray = taskManager.getHistory().toArray(new Task[2]);
         assertArrayEquals(expectedArray, actualArray);
     }
+
 }
