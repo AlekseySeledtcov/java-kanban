@@ -17,27 +17,38 @@ public class InMemoryTaskManager implements TaskManager {
         id = 0;
     }
 
+    public HashMap<Integer, Task> getTasks() {
+        return tasks;
+    }
+
+    public HashMap<Integer, Epic> getEpics() {
+        return epics;
+    }
+
+    public HashMap<Integer, Subtask> getSubtasks() {
+        return subtasks;
+    }
+
     @Override
-    public Task addTask(Task task) {
+    public void addTask(Task task) {
         task.setId(getId());
-        return tasks.put(task.getId(), task);
+        tasks.put(task.getId(), task);
     }
 
     @Override
-    public Epic addEpic(Epic epic) {
+    public void addEpic(Epic epic) {
         epic.setId(getId());
-        return epics.put(epic.getId(), epic);
+        epics.put(epic.getId(), epic);
     }
 
     @Override
-    public Subtask addSubtask(Subtask subtask) {
+    public void addSubtask(Subtask subtask) {
         subtask.setId(getId());
-        if (subtask.getEpicId() == subtask.getId()) {
-            return null;
-        } else {
-            epics.get(subtask.getEpicId()).setSubtaskIdList(subtask.getId());
-            return subtasks.put(subtask.getId(), subtask);
+            if (subtask.getEpicId() == subtask.getId()) {
+            return;
         }
+        epics.get(subtask.getEpicId()).setSubtaskIdList(subtask.getId());
+        subtasks.put(subtask.getId(), subtask);
     }
 
     // Получение ArrayList по типам задач

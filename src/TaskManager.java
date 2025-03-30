@@ -2,12 +2,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
-    Task addTask(Task task);
+    void addTask(Task task);
 
-    Epic addEpic(Epic epic);
+    void addEpic(Epic epic);
 
-    Subtask addSubtask(Subtask subtask);
-
+    void addSubtask(Subtask subtask);
 
     ArrayList<Task> getListFromHashTask();
 
