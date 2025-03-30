@@ -1,7 +1,9 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
@@ -132,7 +134,7 @@ class InMemoryTaskManagerTest {
             }
         }
         assertEquals(task1, actualTask, "Значение task1 не сопадает со значением полученным из истории");
-        assertEquals(epic, actualEpic,"Значение epic не сопадает со значением полученным из истории");
+        assertEquals(epic, actualEpic, "Значение epic не сопадает со значением полученным из истории");
         assertEquals(subtask, actualSubtask, "Значение subtask не сопадает со значением полученным из истории");
     }
 }

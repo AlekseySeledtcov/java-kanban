@@ -125,13 +125,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             while (br.ready()) {
                 String line = br.readLine();
                 if (fromString(line).getClass().getName().equals("Task")) {
-                    fileBackedTaskManager.getTasks().put(fromString(line).getId(),fromString(line));
+                    fileBackedTaskManager.getTasks().put(fromString(line).getId(), fromString(line));
                 }
                 if (fromString(line).getClass().getName().equals("Epic")) {
-                    fileBackedTaskManager.getEpics().put(fromString(line).getId(),(Epic) fromString(line));
+                    fileBackedTaskManager.getEpics().put(fromString(line).getId(), (Epic) fromString(line));
                 }
                 if (fromString(line).getClass().getName().equals("Subtask")) {
-                    fileBackedTaskManager.getSubtasks().put(fromString(line).getId(),(Subtask) fromString(line));
+                    fileBackedTaskManager.getSubtasks().put(fromString(line).getId(), (Subtask) fromString(line));
                 }
             }
         } catch (IOException e) {

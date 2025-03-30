@@ -44,7 +44,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addSubtask(Subtask subtask) {
         subtask.setId(getId());
-            if (subtask.getEpicId() == subtask.getId()) {
+        if (subtask.getEpicId() == subtask.getId()) {
             return;
         }
         epics.get(subtask.getEpicId()).setSubtaskIdList(subtask.getId());
