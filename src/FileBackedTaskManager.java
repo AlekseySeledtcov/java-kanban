@@ -82,6 +82,26 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         save();
     }
 
+    public static FileBackedTaskManager loadFromFile(File file) {
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
+        try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
+            while (br.ready()) {
+                String line = br.readLine();
+                if (fromString(line).getClass().getName().equals("Task")) {
+                    fileBackedTaskManager.getTasks().put(fromString(line).getId(), fromString(line));
+                }
+                if (fromString(line).getClass().getName().equals("Epic")) {
+                    fileBackedTaskManager.getEpics().put(fromString(line).getId(), (Epic) fromString(line));
+                }
+                if (fromString(line).getClass().getName().equals("Subtask")) {
+                    fileBackedTaskManager.getSubtasks().put(fromString(line).getId(), (Subtask) fromString(line));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return fileBackedTaskManager;
+    }
 
     private void save() {
         List<String> allTasks = new ArrayList<>();
@@ -103,7 +123,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    public static Task fromString(String value) {
+    private static Task fromString(String value) {
         String[] fields = value.split(",");
         Task loadTask;
         if (fields[1].equals("TASK")) {
@@ -117,26 +137,5 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         loadTask.setId(Integer.parseInt(fields[0]));
         loadTask.setStatus(Status.valueOf(fields[3]));
         return loadTask;
-    }
-
-    public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
-        try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            while (br.ready()) {
-                String line = br.readLine();
-                if (fromString(line).getClass().getName().equals("Task")) {
-                    fileBackedTaskManager.getTasks().put(fromString(line).getId(), fromString(line));
-                }
-                if (fromString(line).getClass().getName().equals("Epic")) {
-                    fileBackedTaskManager.getEpics().put(fromString(line).getId(), (Epic) fromString(line));
-                }
-                if (fromString(line).getClass().getName().equals("Subtask")) {
-                    fileBackedTaskManager.getSubtasks().put(fromString(line).getId(), (Subtask) fromString(line));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return fileBackedTaskManager;
     }
 }
