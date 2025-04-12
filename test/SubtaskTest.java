@@ -1,7 +1,6 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SubtaskTest {
@@ -23,6 +22,7 @@ public class SubtaskTest {
 
     @Test
     void SubtaskObjectCannotBeMadeItsOwnEpic() {
-        assertNull(taskManager.addSubtask(subtask1), "Объект Subtask не может быть эпиком для самого себя");
+        taskManager.addSubtask(subtask1);
+        assertEquals(0, taskManager.getSubtasks().size(), "Субтаск не может сам себя назначить эпиком");
     }
 }
