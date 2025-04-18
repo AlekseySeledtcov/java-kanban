@@ -118,8 +118,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.format("%d,%S,%s,%S,%s,%s,%d,%s%n", id, Type.TASK, name, status, description
-                , startTime.format(formatter), duration.toMinutes(), endTime.format(formatter));
+        return String.format("%d,%S,%s,%S,%s,%s,%d,%s%n", id, Type.TASK, name, status, description,
+                startTime.format(formatter), duration.toMinutes(), endTime.format(formatter));
     }
 
     protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
