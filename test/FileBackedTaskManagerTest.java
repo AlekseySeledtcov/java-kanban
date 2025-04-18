@@ -1,27 +1,53 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest {
+class FileBackedTaskManagerTest extends TaskManagerTest {
     File file;
-    private Task task1;
-    private Epic epic;
-    private Subtask subtask;
 
     @BeforeEach
     void beforeEach() {
-        task1 = new Task("Name Test Task", "Description Test Task");
-        epic = new Epic("Name Test Epic", "Description Test Epic");
-        subtask = new Subtask("Name Test Subtask", "Description Test Subtask", 1);
         try {
             file = File.createTempFile("save", ".CSV");
+            manager = FileBackedTaskManager.loadFromFile(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        super.beforeEach();
+    }
+
+    @Test
+    void giveTasksOfDifferentTypesAndFindThemById() {
+        super.giveTasksOfDifferentTypesAndFindThemById();
+    }
+
+    @Test
+    void checkThatTasksWithTheGivenIdAndTheGeneratedDoNotConflict() {
+        super.checkThatTasksWithTheGivenIdAndTheGeneratedDoNotConflict();
+    }
+
+    @Test
+    void CheckingThatTheTaskHasNotChangedInAllFieldsAfterAddingToTheManager() {
+        super.CheckingThatTheTaskHasNotChangedInAllFieldsAfterAddingToTheManager();
+    }
+
+    @Test
+    void tasksAddedToHistoryManagerRetainThePreviousVersionOfTheTask() {
+        super.tasksAddedToHistoryManagerRetainThePreviousVersionOfTheTask();
+    }
+
+    @Test
+    void calculationOfBoundaryValuesAllSubtasksWithStatus() {
+        super.calculationOfBoundaryValuesAllSubtasksWithStatus();
+    }
+
+    @Test
+    void checkingForIntersectionOfTimeIntervals() {
+        super.checkingForIntersectionOfTimeIntervals();
     }
 
     @Test
@@ -39,18 +65,36 @@ class FileBackedTaskManagerTest {
     @Test
     void saveAndLoad() {
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
-        fileBackedTaskManager.addTask(task1);
-        fileBackedTaskManager.addEpic(epic);
-        fileBackedTaskManager.addSubtask(subtask);
         String actualTask = task1.toString();
         String actualEpic = epic.toString();
-        String actualSubtask = subtask.toString();
+        String actualSubtask = subtask1.toString();
         FileBackedTaskManager fbNew = FileBackedTaskManager.loadFromFile(file);
         String expectedTask = fbNew.getTaskById(task1.getId()).toString();
         String expectedEpic = fbNew.getEpicById(epic.getId()).toString();
-        String expectedSubtask = fbNew.getSubtaskById(subtask.getId()).toString();
+        String expectedSubtask = fbNew.getSubtaskById(subtask1.getId()).toString();
         assertEquals(expectedTask, actualTask, "Сохраненые и загруженные Taskи несовпадают");
         assertEquals(expectedEpic, actualEpic, "Сохраненые и загруженные Epicи несовпадают");
         assertEquals(expectedSubtask, actualSubtask, "Сохраненые и загруженные Subtaskи несовпадают");
+    }
+
+    @Test
+    void catchingExceptions() {
+        file = new File("NotFound.CSV");
+        assertThrows(IOException.class, () -> {
+            BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
+            while (br.ready()) {
+                String line = br.readLine();
+                System.out.println(line);
+            }
+        }, "Тест провален!");
+    }
+
+    @Test
+    void doesNotExceptions() {
+        String line = "Ели мясо мужики, пивом запивали";
+        assertDoesNotThrow(() -> {
+            FileWriter fw = new FileWriter(file, StandardCharsets.UTF_8);
+            fw.write(line);
+        }, "Тест провален!");
     }
 }

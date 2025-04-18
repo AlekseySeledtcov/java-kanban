@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
@@ -8,11 +7,11 @@ public interface TaskManager {
 
     void addSubtask(Subtask subtask);
 
-    ArrayList<Task> getListFromHashTask();
+    List<Task> getListFromHashTask();
 
-    ArrayList<Epic> getListFromHashEpic();
+    List<Epic> getListFromHashEpic();
 
-    ArrayList<Subtask> getListFromHashSubtask();
+    List<Subtask> getListFromHashSubtask();
 
     void removeTaskType();
 
@@ -38,7 +37,9 @@ public interface TaskManager {
 
     void removeSubtaskById(int id);
 
-    ArrayList<Subtask> getEpicSubtask(int id);
+    List<Subtask> getEpicSubtask(int id);
 
     List<Task> getHistory();
+
+    boolean intersection(Task task);
 }
