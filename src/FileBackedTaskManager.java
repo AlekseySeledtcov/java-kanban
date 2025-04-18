@@ -1,7 +1,8 @@
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     File file;
@@ -127,15 +128,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         String[] fields = value.split(",");
         Task loadTask;
         if (fields[1].equals("TASK")) {
-            loadTask = new Task(fields[2], fields[4]);
+            loadTask = new Task(fields[2], fields[4], Integer.parseInt(fields[6]));
         } else if (fields[1].equals("EPIC")) {
             loadTask = new Epic(fields[2], fields[4]);
+            loadTask.setDuration(Duration.ofMinutes(Integer.parseInt(fields[6])));
         } else {
-            loadTask = new Subtask(fields[2], fields[4], Integer.parseInt(fields[5]));
+            loadTask = new Subtask(fields[2], fields[4], Integer.parseInt(fields[8]), Integer.parseInt(fields[6]));
         }
         loadTask.setId(Integer.parseInt(fields[0]));
-        loadTask.setId(Integer.parseInt(fields[0]));
         loadTask.setStatus(Status.valueOf(fields[3]));
+        loadTask.setStartTime(LocalDateTime.parse(fields[5], Task.formatter));
+        loadTask.setEndTime(LocalDateTime.parse(fields[7], Task.formatter));
         return loadTask;
     }
 }

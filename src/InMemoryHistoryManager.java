@@ -25,13 +25,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         removeMap.put(task.getId(), newNode);
 
-        if (head != null && tail != null && head.equals(tail)) {
+        if (head == null && tail == null) {
+            head = newNode;
+        } else if (head != null && tail == null) {
             tail = newNode;
             tail.prev = head;
             head.next = tail;
-        } else if (tail == null) {
-            head = newNode;
-            tail = newNode;
         } else {
             tail.next = newNode;
             newNode.prev = tail;
@@ -65,18 +64,20 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void removeNode(Node node) {
-        if (node.prev == null) {
-            head = node.next;
-            head.prev = null;
-        } else if (node.next == null) {
+        if (node.prev != null && node.next != null) {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        } else if (node.next == null && node.prev != null) {
             tail = node.prev;
             tail.next = null;
+        } else if (node.prev == null & node.next != null) {
+            head = node.next;
+            head.prev = null;
         } else {
-            Node head = node.prev;
-            Node tail = node.next;
-            head.next = tail;
-            tail.prev = head;
+            head = null;
+            tail = null;
         }
         size--;
     }
+
 }

@@ -1,12 +1,15 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
-    protected ArrayList<Integer> subtaskIdList;
+    private ArrayList<Integer> subtaskIdList;
 
     public Epic(String name, String description) {
         super(name, description);
         subtaskIdList = new ArrayList<>();
+        this.duration = null;
     }
 
     public void setSubtaskIdList(Integer id) {
@@ -28,6 +31,10 @@ public class Epic extends Task {
                 subtaskIdList.remove(i);
             }
         }
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
     }
 
     @Override
@@ -52,6 +59,23 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return String.format("%d,%S,%s,%S,%s%n", id, Type.EPIC, name, status, description);
+        String s = id + "," + Type.EPIC + "," + name + "," + status + "," + description;
+        if (startTime != null) {
+            s = s + "," + startTime.format(formatter);
+        } else {
+            s = s + "," + null;
+        }
+        if (duration != null) {
+            s = s + "," + duration.toMinutes();
+        } else {
+            s = s + "," + null;
+        }
+        if (endTime != null) {
+            s = s + "," + endTime.format(formatter);
+        } else {
+            s = s + "," + null;
+        }
+        s = s + "\n";
+        return s;
     }
 }

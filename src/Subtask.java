@@ -3,8 +3,8 @@ import java.util.Objects;
 public class Subtask extends Task {
     private final int epicId;
 
-    public Subtask(String name, String description, int epicId) {
-        super(name, description);
+    public Subtask(String name, String description, int epicId, int durationInMinutes) {
+        super(name, description, durationInMinutes);
         this.epicId = epicId;
     }
 
@@ -15,11 +15,6 @@ public class Subtask extends Task {
     public int getEpicId() {
         return epicId;
     }
-
-    public Status getStatus() {
-        return status;
-    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -43,6 +38,7 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return String.format("%d,%S,%s,%S,%s,%s%n", id, Type.SUBTASK, name, status, description, epicId);
+        return String.format("%d,%S,%s,%S,%s,%s,%d,%s,%d%n", id, Type.SUBTASK, name, status, description
+                , startTime.format(formatter), duration.toMinutes(), endTime.format(formatter), epicId);
     }
 }
