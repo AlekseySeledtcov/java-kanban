@@ -40,19 +40,17 @@ public class Epic extends Task {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         Epic epic = (Epic) o;
 
-        if (id != epic.id) return false;
-        if (!Objects.equals(name, epic.name)) return false;
-        if (!Objects.equals(description, epic.description)) return false;
-        return status == epic.status && subtaskIdList.equals(epic.subtaskIdList);
+        return Objects.equals(subtaskIdList, epic.subtaskIdList);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + subtaskIdList.hashCode();
+        result = 31 * result + (subtaskIdList != null ? subtaskIdList.hashCode() : 0);
         return result;
     }
 

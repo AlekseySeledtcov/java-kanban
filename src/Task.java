@@ -1,7 +1,6 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.Objects;
 
 public class Task {
@@ -70,27 +69,6 @@ public class Task {
         this.endTime = endTime;
     }
 
-    public static class TaskTimeComparator implements Comparator<Task> {
-        @Override
-        public int compare(Task o1, Task o2) {
-            int difference = 0;
-            if (o1.startTime.getYear() != o2.startTime.getYear()) {
-                difference = o1.startTime.getYear() - o2.startTime.getYear();
-            } else if (o1.startTime.getMonthValue() != (o2.startTime.getMonthValue())) {
-                difference = o1.startTime.getMonthValue() - o2.startTime.getMonthValue();
-            } else if (o1.startTime.getDayOfMonth() != o2.startTime.getDayOfMonth()) {
-                difference = o1.startTime.getDayOfMonth() - o2.startTime.getDayOfMonth();
-            } else if (o1.startTime.getHour() != o2.startTime.getHour()) {
-                difference = o1.startTime.getHour() - o2.startTime.getHour();
-            } else if (o1.startTime.getMinute() != o2.startTime.getMinute()) {
-                difference = o1.startTime.getHour() - o2.startTime.getHour();
-            } else if (o1.startTime.getSecond() != o2.startTime.getSecond()) {
-                difference = o1.startTime.getSecond() - o2.startTime.getSecond();
-            }
-            return difference;
-        }
-    }
-
     public boolean intersectionCheck(Task task) {
         return this.getEndTime().isAfter(task.getStartTime());
     }
@@ -105,14 +83,21 @@ public class Task {
         if (id != task.id) return false;
         if (!Objects.equals(name, task.name)) return false;
         if (!Objects.equals(description, task.description)) return false;
-        return status == task.status;
+        if (status != task.status) return false;
+        if (!Objects.equals(duration, task.duration)) return false;
+        if (!Objects.equals(startTime, task.startTime)) return false;
+        return Objects.equals(endTime, task.endTime);
     }
 
     @Override
     public int hashCode() {
-        int result = (name != null ? name.hashCode() : 0);
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (duration != null ? duration.hashCode() : 0);
+        result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
+        result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
         return result;
     }
 

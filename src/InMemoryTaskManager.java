@@ -32,7 +32,14 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addTask(Task task) {
         task.setId(getId());
-        intersection(task);
+        try {
+            if (intersection(task)) {
+                throw new ManagerSaveException("Наложение временных интервалов");
+            }
+        } catch (ManagerSaveException exception) {
+            System.out.println(exception.getMessage());
+            return;
+        }
         tasks.put(task.getId(), task);
     }
 
@@ -45,6 +52,14 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addSubtask(Subtask subtask) {
         subtask.setId(getId());
+        try {
+            if (intersection(subtask)) {
+                throw new ManagerSaveException("Наложение временных интервалов");
+            }
+        } catch (ManagerSaveException exception) {
+            System.out.println(exception.getMessage());
+            return;
+        }
         if (subtask.getEpicId() == subtask.getId()) {
             return;
         }
@@ -148,12 +163,27 @@ public class InMemoryTaskManager implements TaskManager {
     //Обновление задач
     @Override
     public void updateTask(Task task) {
+        try {
+            if (intersection(task)) {
+                throw new ManagerSaveException("Наложение временных интервалов");
+            }
+        } catch (ManagerSaveException exception) {
+            System.out.println(exception.getMessage());
+            return;
+        }
         tasks.put(task.getId(), task);
     }
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        int epicId = subtask.getEpicId();
+        try {
+            if (intersection(subtask)) {
+                throw new ManagerSaveException("Наложение временных интервалов");
+            }
+        } catch (ManagerSaveException exception) {
+            System.out.println(exception.getMessage());
+            return;
+        }
         ArrayList<Integer> idList;
         subtasks.put(subtask.getId(), subtask);
         Epic epic = epics.get(subtask.getEpicId());
@@ -223,22 +253,28 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
+    Set prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+
     public Set<Task> getPrioritizedTasks() {
-        Set<Task> timedTasks;
+        Set<Task> timedTasks = prioritizedTasks;
         List<Task> allTasks = getListFromHashTask();
         allTasks.addAll(getListFromHashSubtask());
         allTasks.addAll(getListFromHashEpic());
-        timedTasks = allTasks.stream()
+        allTasks.stream()
                 .filter(task -> task.getStartTime() != null)
+                .map(task -> {
+                    timedTasks.add(task);
+                    return task;
+                })
                 .collect(Collectors.toSet());
         return timedTasks;
     }
 
     @Override
-    public boolean intersection(Task task) {
-        boolean bol = getPrioritizedTasks().stream()
+    public boolean intersection(Task task) throws ManagerSaveException {
+        boolean bool = getPrioritizedTasks().stream()
                 .anyMatch(s -> s.intersectionCheck(task) == true);
-        return bol;
+        return bool;
     }
 
     // Расчитывает статус Эпика

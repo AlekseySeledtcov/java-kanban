@@ -120,7 +120,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 fw.write(allTask);
             }
         } catch (IOException e) {
-            throw new ManagerSaveException();
+            throw new ManagerSaveException("Неудачная попытка записи в файл");
         }
     }
 
