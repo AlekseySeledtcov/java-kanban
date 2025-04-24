@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
+    public Set<Task> timedTasks;
     private HashMap<Integer, Task> tasks;
     private HashMap<Integer, Epic> epics;
     private HashMap<Integer, Subtask> subtasks;
@@ -16,6 +17,7 @@ public class InMemoryTaskManager implements TaskManager {
         epics = new HashMap<>();
         subtasks = new HashMap<>();
         id = 0;
+        timedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
     }
 
     public HashMap<Integer, Task> getTasks() {
@@ -41,6 +43,7 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println(exception.getMessage());
         }
         tasks.put(task.getId(), task);
+        getPrioritizedTasks();
     }
 
     @Override
@@ -67,6 +70,7 @@ public class InMemoryTaskManager implements TaskManager {
         epicStartTimeCalculator(epics.get(subtask.getEpicId()));
         epicDurationUpdate(subtask);
         epicEndTimeCalculator(epics.get(subtask.getEpicId()));
+        getPrioritizedTasks();
     }
 
     // Получение списка по типам задач
@@ -100,6 +104,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.remove(task.getId());
         }
         tasks.clear();
+        getPrioritizedTasks();
     }
 
     @Override
@@ -139,6 +144,7 @@ public class InMemoryTaskManager implements TaskManager {
                     })
                     .collect(Collectors.toList());
         }
+        getPrioritizedTasks();
     }
 
     @Override
@@ -171,6 +177,7 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println(exception.getMessage());
         }
         tasks.put(task.getId(), task);
+        getPrioritizedTasks();
     }
 
     @Override
@@ -192,6 +199,7 @@ public class InMemoryTaskManager implements TaskManager {
         epicDurationUpdate(subtask);
         epicStartTimeCalculator(epic);
         epicEndTimeCalculator(epic);
+        getPrioritizedTasks();
     }
 
     @Override
@@ -203,6 +211,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setSubtaskIdList(id);
         }
         epics.put(epic.getId(), epic);
+        getPrioritizedTasks();
     }
 
     //Удаление задач по идентификатору.
@@ -210,6 +219,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeTaskById(int id) {
         historyManager.remove(id);
         tasks.remove(id);
+        getPrioritizedTasks();
     }
 
     @Override
@@ -238,6 +248,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setStatus(status);
         epicStartTimeCalculator(epics.get(epicId));
         epicEndTimeCalculator(epics.get(epicId));
+        getPrioritizedTasks();
     }
 
     @Override
@@ -253,8 +264,7 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
-    public Set<Task> getPrioritizedTasks() {
-        Set<Task> timedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    private void getPrioritizedTasks() {
         List<Task> allTasks = getListFromHashTask();
         allTasks.addAll(getListFromHashSubtask());
         allTasks.addAll(getListFromHashEpic());
@@ -266,12 +276,11 @@ public class InMemoryTaskManager implements TaskManager {
                     return task;
                 })
                 .collect(Collectors.toSet());
-        return timedTasks;
     }
 
     @Override
     public boolean intersection(Task task) throws ManagerSaveException {
-        boolean bool = getPrioritizedTasks().stream()
+        boolean bool = timedTasks.stream()
                 .anyMatch(s -> s.intersectionCheck(task) == true);
         return bool;
     }
