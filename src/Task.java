@@ -83,10 +83,7 @@ public class Task {
         if (id != task.id) return false;
         if (!Objects.equals(name, task.name)) return false;
         if (!Objects.equals(description, task.description)) return false;
-        if (status != task.status) return false;
-        if (!Objects.equals(duration, task.duration)) return false;
-        if (!Objects.equals(startTime, task.startTime)) return false;
-        return Objects.equals(endTime, task.endTime);
+        return status != task.status;
     }
 
     @Override
