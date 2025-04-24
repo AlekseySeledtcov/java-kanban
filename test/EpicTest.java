@@ -14,10 +14,9 @@ public class EpicTest {
 
     @Test
     void EpicObjectCannotDeAddedToItself() {
-        epic1.setId(epic1.hashCode());
-        epic1.setSubtaskIdList(epic1.hashCode());
+        epic1.setId(10);
+        epic1.setSubtaskIdList(epic1.getId());
         assertNull(epic1.getSubtaskIdList().get(0), "Epic нельзя добавить в самого себя в виде подзадачи");
     }
-
 
 }

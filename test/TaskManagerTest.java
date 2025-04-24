@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +20,23 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @BeforeEach
     void beforeEach() {
-        task1 = new Task("Name Test Task1", "Description Test Task1", 20);
-        task2 = new Task("Name Test Task2", "Description Test Task2", 20);
+        task1 = new Task("Name Test Task1", "Description Test Task1", 10);
+        task2 = new Task("Name Test Task2", "Description Test Task2", 10);
         epic = new Epic("Name Test Epic", "Description Test Epic");
         subtask1 = new Subtask("Name Test Subtask1", "Description Test Subtask1", 2, 10);
-        subtask2 = new Subtask("Name Test Subtask2", "Description Test Subtask2", 2, 15);
-        subtask3 = new Subtask("Name Test Subtask3", "Description Test Subtask3", 2, 20);
+        subtask2 = new Subtask("Name Test Subtask2", "Description Test Subtask2", 2, 10);
+        subtask3 = new Subtask("Name Test Subtask3", "Description Test Subtask3", 2, 10);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
+        task1.setStartTime(LocalDateTime.parse("24.04.2025, 10:00", dtf));
+        task1.setEndTime(LocalDateTime.parse("24.04.2025, 10:10", dtf));
+        task2.setStartTime(LocalDateTime.parse("24.04.2025, 10:11", dtf));
+        task2.setEndTime(LocalDateTime.parse("24.04.2025, 10:21", dtf));
+        subtask1.setStartTime(LocalDateTime.parse("24.04.2025, 10:22", dtf));
+        subtask1.setEndTime(LocalDateTime.parse("24.04.2025, 10:32", dtf));
+        subtask2.setStartTime(LocalDateTime.parse("24.04.2025, 10:33", dtf));
+        subtask2.setEndTime(LocalDateTime.parse("24.04.2025, 10:43", dtf));
+        subtask3.setStartTime(LocalDateTime.parse("24.04.2025, 10:44", dtf));
+        subtask3.setEndTime(LocalDateTime.parse("24.04.2025, 10:54", dtf));
         manager.addTask(task1);
         manager.addTask(task2);
         manager.addEpic(epic);
@@ -164,15 +177,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void checkingForIntersectionOfTimeIntervals() {
-        task2.setStartTime(task2.getStartTime().plusMinutes(10));
-        manager.updateTask(task2);
-        assertTrue(manager.intersection(task2), "Пересечение временных интервалов не обнаружено");
-        subtask1.setStartTime(subtask1.getStartTime().plusMinutes(11));
-        manager.updateSubtask(subtask1);
-        assertTrue(manager.intersection(subtask1), "Пересечение временных интервалов не обнаружено");
-        assertTrue(manager.intersection(epic), "Пересечение временных интервалов не обнаружено");
-        task2.setStartTime(task2.getStartTime().plusMinutes(30));
-        manager.updateTask(task2);
-        assertFalse(manager.intersection(task2), "Пересечение временных интервалов обнаружено");
+        assertTrue(manager.intersection(task2), "Пересечение временных интервалов не обнаружено Task2");
+        assertTrue(manager.intersection(subtask1), "Пересечение временных интервалов не обнаружено Subtask1");
+        assertTrue(manager.intersection(epic), "Пересечение временных интервалов не обнаружено Epic");
+        Task task3 = new Task("Name Test Task3", "Description Test Task3", 10);
+        assertFalse(manager.intersection(task3), "Пересечение временных интервалов обнаружено");
     }
 }
