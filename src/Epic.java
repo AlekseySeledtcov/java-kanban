@@ -1,12 +1,14 @@
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
-    protected ArrayList<Integer> subtaskIdList;
+    private ArrayList<Integer> subtaskIdList;
 
     public Epic(String name, String description) {
         super(name, description);
         subtaskIdList = new ArrayList<>();
+        this.duration = null;
     }
 
     public void setSubtaskIdList(Integer id) {
@@ -30,28 +32,47 @@ public class Epic extends Task {
         }
     }
 
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         Epic epic = (Epic) o;
 
-        if (id != epic.id) return false;
-        if (!Objects.equals(name, epic.name)) return false;
-        if (!Objects.equals(description, epic.description)) return false;
-        return status == epic.status && subtaskIdList.equals(epic.subtaskIdList);
+        return Objects.equals(subtaskIdList, epic.subtaskIdList);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + subtaskIdList.hashCode();
+        result = 31 * result + (subtaskIdList != null ? subtaskIdList.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return String.format("%d,%S,%s,%S,%s%n", id, Type.EPIC, name, status, description);
+        String s = id + "," + Type.EPIC + "," + name + "," + status + "," + description;
+        if (startTime != null) {
+            s = s + "," + startTime.format(formatter);
+        } else {
+            s = s + "," + null;
+        }
+        if (duration != null) {
+            s = s + "," + duration.toMinutes();
+        } else {
+            s = s + "," + null;
+        }
+        if (endTime != null) {
+            s = s + "," + endTime.format(formatter);
+        } else {
+            s = s + "," + null;
+        }
+        s = s + "\n";
+        return s;
     }
 }

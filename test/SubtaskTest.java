@@ -10,8 +10,8 @@ public class SubtaskTest {
 
     @BeforeEach
     public void beforeEach() {
-        subtask1 = new Subtask("Name Test Subtask", "Description Test Subtask", 0);
-        subtask2 = new Subtask("Name Test Subtask", "Description Test Subtask", 0);
+        subtask1 = new Subtask("Name Test Subtask", "Description Test Subtask", 0, 20);
+        subtask2 = new Subtask("Name Test Subtask", "Description Test Subtask", 0, 20);
 
     }
 
