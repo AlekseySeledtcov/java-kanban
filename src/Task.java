@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
-    protected int id;
+    protected Integer id;
     protected final String name;
     protected final String description;
     protected Status status;
@@ -12,8 +12,9 @@ public class Task {
     protected LocalDateTime startTime;
     protected LocalDateTime endTime;
 
+
     public Task(String name, String description, int durationInMinutes) {
-        this.id = 0;
+        this.id = null;
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
@@ -35,6 +36,10 @@ public class Task {
 
     public int getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setStatus(Status status) {
@@ -70,7 +75,10 @@ public class Task {
     }
 
     public boolean intersectionCheck(Task task) {
-        return this.getEndTime().isAfter(task.getStartTime());
+        return (task.getEndTime().isAfter(this.getStartTime()) && task.getEndTime().isBefore(this.getEndTime()))
+                || (task.getStartTime().isAfter(this.startTime) && task.getStartTime().isBefore(this.getEndTime()))
+                || (task.getStartTime().isBefore(this.getStartTime()) && task.getEndTime().isAfter(this.getEndTime()))
+                || task.getStartTime().equals(this.startTime) || task.getEndTime().equals(this.endTime);
     }
 
     @Override
@@ -80,15 +88,15 @@ public class Task {
 
         Task task = (Task) o;
 
-        if (id != task.id) return false;
+        if (!Objects.equals(id, task.id)) return false;
         if (!Objects.equals(name, task.name)) return false;
         if (!Objects.equals(description, task.description)) return false;
-        return status != task.status;
+        return status == task.status;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);

@@ -10,7 +10,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
     }
 
     @Test
-    void giveTasksOfDifferentTypesAndFindThemById() {
+    void giveTasksOfDifferentTypesAndFindThemById() throws NotFoundException {
         super.giveTasksOfDifferentTypesAndFindThemById();
     }
 
@@ -25,12 +25,12 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
     }
 
     @Test
-    void tasksAddedToHistoryManagerRetainThePreviousVersionOfTheTask() {
+    void tasksAddedToHistoryManagerRetainThePreviousVersionOfTheTask() throws NotFoundException {
         super.tasksAddedToHistoryManagerRetainThePreviousVersionOfTheTask();
     }
 
     @Test
-    void calculationOfBoundaryValuesAllSubtasksWithStatus() {
+    void calculationOfBoundaryValuesAllSubtasksWithStatus() throws NotFoundException {
         super.calculationOfBoundaryValuesAllSubtasksWithStatus();
     }
 

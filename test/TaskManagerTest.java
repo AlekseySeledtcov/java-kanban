@@ -46,7 +46,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void giveTasksOfDifferentTypesAndFindThemById() {
+    void giveTasksOfDifferentTypesAndFindThemById() throws NotFoundException {
         int idTask = 0;
         int idSubtask = 0;
         int idEpic = 0;
@@ -113,7 +113,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void tasksAddedToHistoryManagerRetainThePreviousVersionOfTheTask() {
+    void tasksAddedToHistoryManagerRetainThePreviousVersionOfTheTask() throws NotFoundException {
         int idTask = 0;
         int idEpic = 0;
         int idSubtask = 0;
@@ -152,7 +152,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void calculationOfBoundaryValuesAllSubtasksWithStatus() {
+    void calculationOfBoundaryValuesAllSubtasksWithStatus() throws NotFoundException {
         assertEquals(manager.getEpicById(epic.getId()).getStatus(), Status.NEW
                 , "Статус задачи Epic не соответствует статусу NEW");
         subtask1.setStatus(Status.DONE);
@@ -177,10 +177,15 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void checkingForIntersectionOfTimeIntervals() {
-        assertTrue(manager.intersection(task2), "Пересечение временных интервалов не обнаружено Task2");
-        assertTrue(manager.intersection(subtask1), "Пересечение временных интервалов не обнаружено Subtask1");
-        assertTrue(manager.intersection(epic), "Пересечение временных интервалов не обнаружено Epic");
+        assertFalse(manager.intersection(task2), "Пересечение временных интервалов Task2");
+        assertFalse(manager.intersection(subtask1), "Пересечение временных интервалов Subtask1");
         Task task3 = new Task("Name Test Task3", "Description Test Task3", 10);
-        assertFalse(manager.intersection(task3), "Пересечение временных интервалов обнаружено");
+        Task task4 = new Task("Name Test Task4", "Description Test Task4", 10);
+
+        assertThrows(ManagerSaveException.class, () -> {
+            manager.addTask(task3);
+            manager.addTask(task4);
+        }, "Наложение временных интервалов не обнаружено");
+//        assertTrue(manager.intersection(task4), "Пересечение временных интервалов обнаружено");
     }
 }

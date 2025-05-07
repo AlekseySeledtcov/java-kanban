@@ -19,23 +19,23 @@ public interface TaskManager {
 
     void removeSubtaskType();
 
-    Task getTaskById(int id);
+    Task getTaskById(int id) throws NotFoundException;
 
-    Epic getEpicById(int id);
+    Epic getEpicById(int id) throws NotFoundException;
 
-    Subtask getSubtaskById(int id);
+    Subtask getSubtaskById(int id) throws NotFoundException;
 
-    void updateTask(Task task);
+    void updateTask(Task task) throws NotFoundException;
 
     void updateEpic(Epic epic);
 
-    void updateSubtask(Subtask subtask);
+    void updateSubtask(Subtask subtask) throws NotFoundException;
 
-    void removeTaskById(int id);
+    void removeTaskById(int id) throws NotFoundException;
 
-    void removeEpicById(int id);
+    void removeEpicById(int id) throws NotFoundException;
 
-    void removeSubtaskById(int id);
+    void removeSubtaskById(int id) throws NotFoundException;
 
     List<Subtask> getEpicSubtask(int id);
 

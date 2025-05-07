@@ -33,34 +33,26 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addTask(Task task) {
+    public void addTask(Task task) throws ManagerSaveException {
         task.setId(getId());
-        try {
-            if (intersection(task)) {
-                throw new ManagerSaveException("Наложение временных интервалов");
-            }
-        } catch (ManagerSaveException exception) {
-            System.out.println(exception.getMessage());
+        if (intersection(task)) {
+            throw new ManagerSaveException("Наложение временных интервалов");
         }
         tasks.put(task.getId(), task);
         getPrioritizedTasks();
     }
 
     @Override
-    public void addEpic(Epic epic) {
+    public void addEpic(Epic epic) throws ManagerSaveException {
         epic.setId(getId());
         epics.put(epic.getId(), epic);
     }
 
     @Override
-    public void addSubtask(Subtask subtask) {
+    public void addSubtask(Subtask subtask) throws ManagerSaveException {
         subtask.setId(getId());
-        try {
-            if (intersection(subtask)) {
-                throw new ManagerSaveException("Наложение временных интервалов");
-            }
-        } catch (ManagerSaveException exception) {
-            System.out.println(exception.getMessage());
+        if (intersection(subtask)) {
+            throw new ManagerSaveException("Наложение временных интервалов");
         }
         if (subtask.getEpicId() == subtask.getId()) {
             return;
@@ -148,49 +140,56 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskById(int id) {
+    public Task getTaskById(int id) throws NotFoundException {
+        if (!tasks.containsKey(id)) {
+            throw new NotFoundException("Задача не найдена");
+        }
         historyManager.add(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
-    public Epic getEpicById(int id) {
+    public Epic getEpicById(int id) throws NotFoundException {
+        if (!epics.containsKey(id)) {
+            throw new NotFoundException("Задача не найдена");
+        }
         historyManager.add(epics.get(id));
         return epics.get(id);
     }
 
     @Override
-    public Subtask getSubtaskById(int id) {
+    public Subtask getSubtaskById(int id) throws NotFoundException {
+        if (!subtasks.containsKey(id)) {
+            throw new NotFoundException("Задача не найдена");
+        }
         historyManager.add(subtasks.get(id));
         return subtasks.get(id);
     }
 
     //Обновление задач
     @Override
-    public void updateTask(Task task) {
+    public void updateTask(Task task) throws ManagerSaveException, NotFoundException {
+        if (!tasks.containsKey(task.getId())) {
+            throw new NotFoundException("Данной задачи не существует");
+        }
         task.setEndTime(task.getStartTime().plusMinutes(task.getDuration().toMinutes()));
-        try {
-            if (intersection(task)) {
-                throw new ManagerSaveException("Наложение временных интервалов");
-            }
-        } catch (ManagerSaveException exception) {
-            System.out.println(exception.getMessage());
+        if (intersection(task)) {
+            throw new ManagerSaveException("Наложение временных интервалов");
         }
         tasks.put(task.getId(), task);
         getPrioritizedTasks();
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
-        subtask.setEndTime(subtask.getStartTime().plusMinutes(subtask.getDuration().toMinutes()));
-
-        try {
-            if (intersection(subtask)) {
-                throw new ManagerSaveException("Наложение временных интервалов");
-            }
-        } catch (ManagerSaveException exception) {
-            System.out.println(exception.getMessage());
+    public void updateSubtask(Subtask subtask) throws ManagerSaveException, NotFoundException{
+        if (!subtasks.containsKey(subtask.getId())) {
+            throw new NotFoundException("Данной задачи не существует");
         }
+        subtask.setEndTime(subtask.getStartTime().plusMinutes(subtask.getDuration().toMinutes()));
+        if (intersection(subtask)) {
+            throw new ManagerSaveException("Наложение временных интервалов");
+        }
+
         ArrayList<Integer> idList;
         subtasks.put(subtask.getId(), subtask);
         Epic epic = epics.get(subtask.getEpicId());
@@ -216,14 +215,20 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Удаление задач по идентификатору.
     @Override
-    public void removeTaskById(int id) {
+    public void removeTaskById(int id) throws NotFoundException {
+        if (!tasks.containsKey(id)) {
+            throw new NotFoundException("Задача не может быть удалена, задача не найдена");
+        }
         historyManager.remove(id);
         tasks.remove(id);
         getPrioritizedTasks();
     }
 
     @Override
-    public void removeEpicById(int id) {
+    public void removeEpicById(int id) throws NotFoundException {
+        if (!epics.containsKey(id)) {
+            throw new NotFoundException("Задача не может быть удалена, задача не найдена");
+        }
         ArrayList<Integer> arrIdSubtaskToDel = new ArrayList<>();
         arrIdSubtaskToDel.addAll(epics.get(id).getSubtaskIdList());
         for (Integer key : arrIdSubtaskToDel) {
@@ -235,7 +240,10 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void removeSubtaskById(int id) {
+    public void removeSubtaskById(int id) throws NotFoundException {
+        if (!subtasks.containsKey(id)) {
+            throw new NotFoundException("Задача не может быть удалена, задача не найдена");
+        }
         int epicId = subtasks.get(id).getEpicId();
         epics.get(epicId).setDuration(epics.get(epicId).getDuration().minus(subtasks.get(id).getDuration()));
         subtasks.remove(id);
@@ -269,7 +277,6 @@ public class InMemoryTaskManager implements TaskManager {
         allTasks.addAll(getListFromHashSubtask());
         allTasks.addAll(getListFromHashEpic());
         allTasks.stream()
-
                 .filter(task -> task.getStartTime() != null)
                 .map(task -> {
                     timedTasks.add(task);
@@ -281,7 +288,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public boolean intersection(Task task) throws ManagerSaveException {
         boolean bool = timedTasks.stream()
+                .filter(s -> s.getId()!=task.getId())
                 .anyMatch(s -> s.intersectionCheck(task) == true);
+        if (bool) {
+        }
         return bool;
     }
 

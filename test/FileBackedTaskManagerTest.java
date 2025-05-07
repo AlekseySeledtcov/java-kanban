@@ -21,7 +21,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest {
     }
 
     @Test
-    void giveTasksOfDifferentTypesAndFindThemById() {
+    void giveTasksOfDifferentTypesAndFindThemById() throws NotFoundException {
         super.giveTasksOfDifferentTypesAndFindThemById();
     }
 
@@ -36,12 +36,12 @@ class FileBackedTaskManagerTest extends TaskManagerTest {
     }
 
     @Test
-    void tasksAddedToHistoryManagerRetainThePreviousVersionOfTheTask() {
+    void tasksAddedToHistoryManagerRetainThePreviousVersionOfTheTask() throws NotFoundException {
         super.tasksAddedToHistoryManagerRetainThePreviousVersionOfTheTask();
     }
 
     @Test
-    void calculationOfBoundaryValuesAllSubtasksWithStatus() {
+    void calculationOfBoundaryValuesAllSubtasksWithStatus() throws NotFoundException {
         super.calculationOfBoundaryValuesAllSubtasksWithStatus();
     }
 
@@ -63,7 +63,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest {
     }
 
     @Test
-    void saveAndLoad() {
+    void saveAndLoad() throws NotFoundException {
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
         String actualTask = task1.toString();
         String actualEpic = epic.toString();

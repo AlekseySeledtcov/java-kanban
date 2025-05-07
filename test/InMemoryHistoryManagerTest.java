@@ -14,7 +14,7 @@ class InMemoryHistoryManagerTest extends TaskManagerTest {
     }
 
     @Test
-    void CheckThatTasksFromHistoryAreReturnedInTheCorrectOrder() {
+    void CheckThatTasksFromHistoryAreReturnedInTheCorrectOrder() throws NotFoundException {
         manager.getTaskById(task2.getId());
         manager.getSubtaskById(subtask1.getId());
         manager.getEpicById(epic.getId());
@@ -25,7 +25,7 @@ class InMemoryHistoryManagerTest extends TaskManagerTest {
     }
 
     @Test
-    void DeleteTasksAndCheckThatTheyHaveBeenRemovedFromHistory() {
+    void DeleteTasksAndCheckThatTheyHaveBeenRemovedFromHistory() throws NotFoundException {
         manager.getTaskById(task1.getId());
         manager.getTaskById(task2.getId());
         manager.getEpicById(epic.getId());
@@ -44,7 +44,7 @@ class InMemoryHistoryManagerTest extends TaskManagerTest {
     }
 
     @Test
-    void Duplication() {
+    void Duplication() throws NotFoundException {
         manager.getSubtaskById(subtask1.getId());
         manager.getSubtaskById(subtask1.getId());
         manager.getSubtaskById(subtask1.getId());
@@ -52,7 +52,7 @@ class InMemoryHistoryManagerTest extends TaskManagerTest {
     }
 
     @Test
-    void deleteFromHistoryFromBeginning() {
+    void deleteFromHistoryFromBeginning() throws NotFoundException {
         manager.getTaskById(task1.getId());
         manager.getTaskById(task2.getId());
         manager.getEpicById(epic.getId());
@@ -65,7 +65,7 @@ class InMemoryHistoryManagerTest extends TaskManagerTest {
     }
 
     @Test
-    void deleteFromHistoryFromTheEnd() {
+    void deleteFromHistoryFromTheEnd() throws NotFoundException {
         manager.getTaskById(task1.getId());
         manager.getTaskById(task2.getId());
         manager.getEpicById(epic.getId());
