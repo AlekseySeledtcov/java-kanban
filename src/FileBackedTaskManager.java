@@ -48,13 +48,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public void updateTask(Task task) throws NotFoundException{
+    public void updateTask(Task task) throws NotFoundException {
         super.updateTask(task);
         save();
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws NotFoundException{
+    public void updateSubtask(Subtask subtask) throws NotFoundException {
         super.updateSubtask(subtask);
         save();
     }
@@ -72,7 +72,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public void removeEpicById(int id) throws NotFoundException{
+    public void removeEpicById(int id) throws NotFoundException {
         super.removeEpicById(id);
         save();
     }
