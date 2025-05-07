@@ -63,25 +63,9 @@ public class HttpTaskServer {
             exchange.close();
         }
 
-        protected void sendNotFound(HttpExchange exchange, String message) throws IOException {
-            String answer = "Not fond \n" + message;
-            byte[] response = answer.getBytes(StandardCharsets.UTF_8);
-            exchange.sendResponseHeaders(404, response.length);
-            exchange.getResponseBody().write(response);
-            exchange.close();
-        }
-
         protected void sendNotFound(HttpExchange exchange) throws IOException {
             byte[] response = "Not fond".getBytes(StandardCharsets.UTF_8);
             exchange.sendResponseHeaders(404, response.length);
-            exchange.getResponseBody().write(response);
-            exchange.close();
-        }
-
-        protected void sendHasInteractions(HttpExchange exchange, String message) throws IOException {
-            String answer = "Not Acceptable \n" + message;
-            byte[] response = answer.getBytes(StandardCharsets.UTF_8);
-            exchange.sendResponseHeaders(406, response.length);
             exchange.getResponseBody().write(response);
             exchange.close();
         }
@@ -108,7 +92,7 @@ public class HttpTaskServer {
                             sendText(httpExchange, serialize(manager.getTaskById(getId(httpExchange))), 200);
                         } catch (NotFoundException exception) {
                             System.out.println(exception.getMessage());
-                            sendNotFound(httpExchange, exception.getMessage());
+                            sendNotFound(httpExchange);
                         }
                     }
                     break;
@@ -123,7 +107,7 @@ public class HttpTaskServer {
                             manager.updateTask(gson.fromJson(body, Task.class));
                         } catch (ManagerSaveException exception) {
                             System.out.println(exception.getMessage());
-                            sendHasInteractions(httpExchange, exception.getMessage());
+                            sendHasInteractions(httpExchange);
                             return;
                         } catch (NotFoundException exception) {
                             System.out.println(exception.getMessage());
@@ -150,7 +134,7 @@ public class HttpTaskServer {
                             sendText(httpExchange, "Задача успешно добавлена", 200);
                         } catch (ManagerSaveException exception) {
                             System.out.println(exception.getMessage());
-                            sendHasInteractions(httpExchange, exception.getMessage());
+                            sendHasInteractions(httpExchange);
                             return;
                         }
                     }
@@ -266,9 +250,9 @@ public class HttpTaskServer {
                     String[] splitPath = requestPath.split("/");
                     if (splitPath.length == 4 && splitPath[3].equals("subtask")) {
                         try {
-                            sendText(httpExchange
-                                    , serialize(manager.getEpicById(getId(httpExchange)).getSubtaskIdList())
-                                    , 200);
+                            sendText(httpExchange,
+                                    serialize(manager.getEpicById(getId(httpExchange)).getSubtaskIdList()),
+                                    200);
                         } catch (NotFoundException exception) {
                             sendNotFound(httpExchange);
                         }
