@@ -54,7 +54,7 @@ public class HttpTaskServer {
         return gson;
     }
 
-    static public class BaseHttpHandler {
+    private static class BaseHttpHandler {
         protected void sendText(HttpExchange exchange, String text, int code) throws IOException {
             byte[] response = text.getBytes(StandardCharsets.UTF_8);
             exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
