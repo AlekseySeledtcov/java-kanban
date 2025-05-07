@@ -181,7 +181,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws ManagerSaveException, NotFoundException{
+    public void updateSubtask(Subtask subtask) throws ManagerSaveException, NotFoundException {
         if (!subtasks.containsKey(subtask.getId())) {
             throw new NotFoundException("Данной задачи не существует");
         }
@@ -288,10 +288,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public boolean intersection(Task task) throws ManagerSaveException {
         boolean bool = timedTasks.stream()
-                .filter(s -> s.getId()!=task.getId())
+                .filter(s -> s.getId() != task.getId())
                 .anyMatch(s -> s.intersectionCheck(task) == true);
-        if (bool) {
-        }
         return bool;
     }
 
