@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SubtaskTest {
     private final InMemoryTaskManager taskManager = new InMemoryTaskManager();
-    Subtask subtask1;
-    Subtask subtask2;
+    private Subtask subtask1;
+    private Subtask subtask2;
 
     @BeforeEach
     public void beforeEach() {

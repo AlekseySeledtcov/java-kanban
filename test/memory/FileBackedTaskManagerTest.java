@@ -9,48 +9,14 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileBackedTaskManagerTest extends TaskManagerTest {
-    File file;
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
+    private File file;
 
     @BeforeEach
-    public void beforeEach() {
-        try {
-            file = File.createTempFile("save", ".CSV");
-            manager = FileBackedTaskManager.loadFromFile(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void beforeEach() throws IOException {
+        file = File.createTempFile("save", ".CSV");
+        manager = FileBackedTaskManager.loadFromFile(file);
         super.beforeEach();
-    }
-
-    @Test
-    public void giveTasksOfDifferentTypesAndFindThemById() throws NotFoundException {
-        super.giveTasksOfDifferentTypesAndFindThemById();
-    }
-
-    @Test
-    public void checkThatTasksWithTheGivenIdAndTheGeneratedDoNotConflict() {
-        super.checkThatTasksWithTheGivenIdAndTheGeneratedDoNotConflict();
-    }
-
-    @Test
-    public void checkingThatTheTaskHasNotChangedInAllFieldsAfterAddingToTheManager() {
-        super.checkingThatTheTaskHasNotChangedInAllFieldsAfterAddingToTheManager();
-    }
-
-    @Test
-    public void tasksAddedToHistoryManagerRetainThePreviousVersionOfTheTask() throws NotFoundException {
-        super.tasksAddedToHistoryManagerRetainThePreviousVersionOfTheTask();
-    }
-
-    @Test
-    public void calculationOfBoundaryValuesAllSubtasksWithStatus() throws NotFoundException {
-        super.calculationOfBoundaryValuesAllSubtasksWithStatus();
-    }
-
-    @Test
-    public void checkingForIntersectionOfTimeIntervals() {
-        super.checkingForIntersectionOfTimeIntervals();
     }
 
     @Test

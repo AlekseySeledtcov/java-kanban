@@ -4,10 +4,11 @@ import file.Type;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subtaskIdList;
+    private final List<Integer> subtaskIdList;
 
     public Epic(String name, String description) {
         super(name, description);
@@ -19,7 +20,7 @@ public class Epic extends Task {
         subtaskIdList.add(this.id != id ? id : null);
     }
 
-    public ArrayList<Integer> getSubtaskIdList() {
+    public List<Integer> getSubtaskIdList() {
         return subtaskIdList;
     }
 

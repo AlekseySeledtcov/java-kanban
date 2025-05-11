@@ -16,10 +16,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
-    private Set<Task> timedTasks;
-    private HashMap<Integer, Task> tasks;
-    private HashMap<Integer, Epic> epics;
-    private HashMap<Integer, Subtask> subtasks;
+    private final Set<Task> timedTasks;
+    private final Map<Integer, Task> tasks;
+    private final Map<Integer, Epic> epics;
+    private final Map<Integer, Subtask> subtasks;
     private int id;
 
     private final HistoryManager historyManager = Managers.getDefaultHistory();
@@ -36,15 +36,15 @@ public class InMemoryTaskManager implements TaskManager {
         return timedTasks;
     }
 
-    public HashMap<Integer, Task> getTasks() {
+    public Map<Integer, Task> getTasks() {
         return tasks;
     }
 
-    public HashMap<Integer, Epic> getEpics() {
+    public Map<Integer, Epic> getEpics() {
         return epics;
     }
 
-    public HashMap<Integer, Subtask> getSubtasks() {
+    public Map<Integer, Subtask> getSubtasks() {
         return subtasks;
     }
 
@@ -134,17 +134,16 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.remove(subtask.getId());
         }
         subtasks.clear();
-        if (arrIdEpics.size() != 0) {
-            arrIdEpics.stream()
-                    .map(id -> {
+        if (!arrIdEpics.isEmpty()) {
+            arrIdEpics.forEach(
+                    id -> {
                         epics.get(id).clearSubtaskIdList();
                         epics.get(id).setStatus(Status.NEW);
                         epics.get(id).setStartTime(null);
                         epics.get(id).setDuration(null);
                         epics.get(id).setEndTime(null);
-                        return id;
-                    })
-                    .collect(Collectors.toList());
+                    }
+            );
         }
         getPrioritizedTasks();
     }
@@ -200,7 +199,7 @@ public class InMemoryTaskManager implements TaskManager {
             throw new ManagerSaveException("Наложение временных интервалов");
         }
 
-        ArrayList<Integer> idList;
+        List<Integer> idList;
         subtasks.put(subtask.getId(), subtask);
         Epic epic = epics.get(subtask.getEpicId());
         idList = epic.getSubtaskIdList();
@@ -213,7 +212,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
-        ArrayList<Integer> arrIdSubtasks;
+        List<Integer> arrIdSubtasks;
         Epic oldEpic = epics.get(epic.getId());
         arrIdSubtasks = oldEpic.getSubtaskIdList();
         for (Integer id : arrIdSubtasks) {
@@ -258,7 +257,7 @@ public class InMemoryTaskManager implements TaskManager {
         epics.get(epicId).setDuration(epics.get(epicId).getDuration().minus(subtasks.get(id).getDuration()));
         subtasks.remove(id);
         historyManager.remove(id);
-        ArrayList<Integer> idList;
+        List<Integer> idList;
         Epic epic = epics.get(epicId);
         epic.removeIdStFromEpicArr(id);
         idList = epic.getSubtaskIdList();
@@ -304,7 +303,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // Расчитывает статус Эпика
-    private Status setEpicStatusById(ArrayList<Integer> idList) {
+    private Status setEpicStatusById(List<Integer> idList) {
         Status status = Status.IN_PROGRESS;
         if (idList.size() == 0) {
             return Status.NEW;

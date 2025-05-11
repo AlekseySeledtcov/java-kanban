@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EpicTest {
-    Epic epic1 = new Epic("Name Test model.Epic", "Description Test model.Epic");
-    Epic epic2 = new Epic("Name Test model.Epic", "Description Test model.Epic");
+    private final Epic epic1 = new Epic("Name Test model.Epic", "Description Test model.Epic");
+    private final Epic epic2 = new Epic("Name Test model.Epic", "Description Test model.Epic");
 
     @Test
     public void checkThatInstancesOfTheTaskClassAreEqualToEachOther() {

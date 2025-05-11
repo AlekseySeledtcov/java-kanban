@@ -13,7 +13,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node head;
     private Node tail;
     private int size;
-    private Map<Integer, Node> removeMap;
+    private final Map<Integer, Node> removeMap;
 
     public InMemoryHistoryManager() {
         head = null;
@@ -76,7 +76,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else if (node.next == null && node.prev != null) {
             tail = node.prev;
             tail.next = null;
-        } else if (node.prev == null & node.next != null) {
+        } else if (node.next != null) {
             head = node.next;
             head.prev = null;
         } else {

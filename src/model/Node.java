@@ -3,7 +3,7 @@ package model;
 import java.util.Objects;
 
 public class Node {
-    private Task data;
+    private final Task data;
     public Node next;
     public Node prev;
 

@@ -6,7 +6,7 @@ import model.Task;
 import java.util.List;
 
 class HistoryHandler extends SimpleGetHandler<List<Task>> {
-    TaskManager manager;
+    private final TaskManager manager;
 
     public HistoryHandler(TaskManager manager) {
         this.manager = manager;

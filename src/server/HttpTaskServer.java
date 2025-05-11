@@ -1,15 +1,15 @@
 package server;
 
 import com.sun.net.httpserver.HttpServer;
-import file.NotFoundException;
 import manager.Managers;
 import manager.TaskManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+
 public class HttpTaskServer {
-    private TaskManager manager;
+    private final TaskManager manager;
     private HttpServer httpServer;
     private static final int PORT = 8080;
 
@@ -17,8 +17,8 @@ public class HttpTaskServer {
         this.manager = manager;
     }
 
-    public static void main(String[] args) throws IOException, NotFoundException {
-        TaskManager manager = Managers.getDefaultManager();
+    public static void main(String[] args) throws IOException {
+        TaskManager manager = Managers.getDefault();
         HttpTaskServer server = new HttpTaskServer(manager);
 
         server.start();

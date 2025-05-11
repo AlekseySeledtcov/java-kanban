@@ -19,26 +19,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpTaskServerTest {
-    HttpTaskServer server;
-    InMemoryTaskManager manager;
-    Task task1;
-    Task task2;
-    Subtask subtask3;
-    Subtask subtask4;
-    Epic epic5;
-    HttpUtils httpUtils;
-
-    public class TaskListTypeToken extends TypeToken<List<Task>> {
-    }
-
-    public class SubtaskListTypeToken extends TypeToken<List<Subtask>> {
-    }
-
-    public class EpicListTypeToken extends TypeToken<List<Epic>> {
-    }
-
-    public class IntegerListTypeToken extends TypeToken<List<Integer>> {
-    }
+    private HttpTaskServer server;
+    private InMemoryTaskManager manager;
+    private Task task1;
+    private Task task2;
+    private Subtask subtask3;
+    private Subtask subtask4;
+    private Epic epic5;
+    private HttpUtils httpUtils;
 
     @BeforeEach
     public void beforeEach() throws IOException {
@@ -152,11 +140,15 @@ public class HttpTaskServerTest {
         HttpResponse<String> responseEpic = httpUtils.sendGETRequest("http://localhost:8080/epics/");
 
         List<Task> actualListTask = httpUtils.getGson().fromJson(responseTask.body(),
-                new TaskListTypeToken().getType());
+                new TypeToken<List<Task>>() {
+                }.getType());
+
         List<Subtask> actualListSubtask = httpUtils.getGson().fromJson(responseSubtask.body(),
-                new SubtaskListTypeToken().getType());
+                new TypeToken<List<Subtask>>() {
+                }.getType());
         List<Epic> actualListEpic = httpUtils.getGson().fromJson(responseEpic.body(),
-                new EpicListTypeToken().getType());
+                new TypeToken<List<Epic>>() {
+                }.getType());
 
         assertEquals(200, responseTask.statusCode(), "Код ответа задания Tфsk не совпадает");
         assertEquals(manager.getListFromHashTask(), actualListTask, "Список заданий Task из менеджера " +
@@ -237,7 +229,8 @@ public class HttpTaskServerTest {
 
         List<Task> expectedList = manager.getHistory();
         List<Task> actualListTask = httpUtils.getGson().fromJson(responseTask.body(),
-                new TaskListTypeToken().getType());
+                new TypeToken<List<Task>>() {
+                }.getType());
 
         assertEquals(200, responseTask.statusCode(), "Код ответа не совпадает");
         assertEquals(expectedList.size(), actualListTask.size(), "Список заданий из менеджа и истоии " +
@@ -257,7 +250,8 @@ public class HttpTaskServerTest {
                 , manager.getSubtaskById(subtask4.getId()));
 
         HttpResponse<String> response = httpUtils.sendGETRequest("http://localhost:8080/prioritized");
-        List<Task> actualList = httpUtils.getGson().fromJson(response.body(), new TaskListTypeToken().getType());
+        List<Task> actualList = httpUtils.getGson().fromJson(response.body(), new TypeToken<List<Task>>() {
+        }.getType());
         assertEquals(200, response.statusCode(), "Код ответа не совпадает");
         assertEquals(expectedList.size(), actualList.size(), "Список заданий из менеджа и priorirized не совпадают");
     }

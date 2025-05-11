@@ -1,101 +1,40 @@
 package server;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import file.HttpMethod;
 import file.ManagerSaveException;
 import file.NotFoundException;
-import file.Status;
 import manager.TaskManager;
 import model.Subtask;
-import model.Task;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
+import java.util.List;
 
-class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
-    TaskManager manager;
+public class SubtaskHandler extends EntityHandler<Subtask> {
 
     public SubtaskHandler(TaskManager manager) {
-        this.manager = manager;
+        super(manager, Subtask.class);
     }
 
     @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
-        HttpMethod method = HttpMethod.valueOf(httpExchange.getRequestMethod());
+    protected List<Subtask> getAll() {
+        return manager.getListFromHashSubtask();
+    }
 
-        switch (method) {
-            case GET:
-                if (getId(httpExchange) == null) {
-                    sendText(httpExchange, serialize(manager.getListFromHashSubtask()), 200);
-                } else {
-                    try {
-                        sendText(httpExchange, serialize(manager.getSubtaskById(getId(httpExchange))), 200);
-                    } catch (NotFoundException exception) {
-                        System.out.println(exception.getMessage());
-                        sendNotFound(httpExchange);
-                    }
-                }
-                break;
-            case POST:
-                InputStream inputStream = httpExchange.getRequestBody();
-                String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
-                if (jsonObject.has("id")) {
-                    jsonObject.get("id").getAsInt();
-                    try {
-                        manager.updateSubtask(gson.fromJson(body, Subtask.class));
-                    } catch (ManagerSaveException exception) {
-                        System.out.println(exception.getMessage());
-                        sendHasInteractions(httpExchange);
-                        return;
-                    } catch (NotFoundException exception) {
-                        System.out.println(exception.getMessage());
-                        sendNotFound(httpExchange);
-                    }
-                    sendText(httpExchange, "Задача успешно обновлена", 201);
-                } else {
-                    String name = jsonObject.get("name").getAsString();
-                    String description = jsonObject.get("description").getAsString();
-                    Status status = Status.valueOf(jsonObject.get("status").getAsString());
-                    int duration = jsonObject.get("duration").getAsInt();
-                    LocalDateTime startTime = LocalDateTime.parse(jsonObject.get("startTime")
-                            .getAsString(), Task.formatter);
-                    LocalDateTime endTime = LocalDateTime.parse(jsonObject.get("endTime")
-                            .getAsString(), Task.formatter);
-                    int epicId = jsonObject.get("epicId").getAsInt();
+    @Override
+    protected Subtask getById(int id) throws NotFoundException {
+        return manager.getSubtaskById(id);
+    }
 
-                    Subtask subtask = new Subtask(name, description, epicId, duration);
-                    subtask.setStatus(status);
-                    subtask.setStartTime(startTime);
-                    subtask.setEndTime(endTime);
+    @Override
+    protected void add(Subtask subtask) throws ManagerSaveException {
+        manager.addSubtask(subtask);
+    }
 
-                    try {
-                        manager.addSubtask(subtask);
-                        sendText(httpExchange, "Задача успешно добавлена", 201);
-                    } catch (ManagerSaveException exception) {
-                        System.out.println(exception.getMessage());
-                        sendHasInteractions(httpExchange);
-                        return;
-                    }
-                }
-                break;
-            case DELETE:
-                try {
-                    manager.removeSubtaskById(getId(httpExchange));
-                } catch (NotFoundException exception) {
-                    System.out.println(exception.getMessage());
-                    sendNotFound(httpExchange);
-                    return;
-                }
-                sendText(httpExchange, "Задача успешно удалена", 200);
-                break;
-            default:
-                break;
-        }
+    @Override
+    protected void update(Subtask subtask) throws ManagerSaveException, NotFoundException {
+        manager.updateSubtask(subtask);
+    }
+
+    @Override
+    protected void remove(int id) throws NotFoundException {
+        manager.removeSubtaskById(id);
     }
 }

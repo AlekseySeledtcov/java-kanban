@@ -10,6 +10,7 @@ import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -18,17 +19,17 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class TaskManagerTest<T extends TaskManager> {
-    T manager;
-    Task task1;
-    Task task2;
-    Epic epic;
-    Subtask subtask1;
-    Subtask subtask2;
-    Subtask subtask3;
-    List<Task> list = new ArrayList<>();
+    protected T manager;
+    protected Task task1;
+    protected Task task2;
+    protected Epic epic;
+    protected Subtask subtask1;
+    protected Subtask subtask2;
+    protected Subtask subtask3;
+    protected List<Task> list = new ArrayList<>();
 
     @BeforeEach
-    public void beforeEach() {
+    public void beforeEach() throws IOException {
         task1 = new Task("Name Test Task1", "Description Test Task1", 10);
         task2 = new Task("Name Test Task2", "Description Test Task2", 10);
         epic = new Epic("Name Test model.Epic", "Description Test model.Epic");
@@ -195,6 +196,5 @@ public abstract class TaskManagerTest<T extends TaskManager> {
             manager.addTask(task3);
             manager.addTask(task4);
         }, "Наложение временных интервалов не обнаружено");
-//        assertTrue(manager.intersection(task4), "Пересечение временных интервалов обнаружено");
     }
 }

@@ -5,14 +5,15 @@ import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class InMemoryHistoryManagerTest extends TaskManagerTest {
+public class InMemoryHistoryManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @BeforeEach
-    public void beforeEach() {
+    public void beforeEach() throws IOException {
         manager = new InMemoryTaskManager();
         super.beforeEach();
     }
