@@ -33,7 +33,7 @@ public class EpicHandler extends EntityHandler<Epic> {
     }
 
     @Override
-    protected void update(Epic epic) throws ManagerSaveException, NotFoundException {
+    protected void update(Epic epic) throws ManagerSaveException {
         manager.updateEpic(epic);
     }
 
