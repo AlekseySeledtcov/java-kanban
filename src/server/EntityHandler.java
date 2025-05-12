@@ -36,20 +36,24 @@ public abstract class EntityHandler<T> extends BaseHttpHandler implements HttpHa
 
     protected abstract void remove(int id) throws NotFoundException;
 
+    protected void handleGet(HttpExchange exchange) throws IOException {
+        if (getId(exchange) == null) {
+            sendText(exchange, serialize(getAll()), 200);
+        } else {
+            try {
+                sendText(exchange, serialize(getById(getId(exchange))), 200);
+            } catch (NotFoundException e) {
+                sendNotFound(exchange);
+            }
+        }
+    }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         HttpMethod method = HttpMethod.valueOf(exchange.getRequestMethod());
         switch (method) {
             case GET:
-                if (getId(exchange) == null) {
-                    sendText(exchange, serialize(getAll()), 200);
-                } else {
-                    try {
-                        sendText(exchange, serialize(getById(getId(exchange))), 200);
-                    } catch (NotFoundException e) {
-                        sendNotFound(exchange);
-                    }
-                }
+                handleGet(exchange);
                 break;
             case POST:
                 String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
